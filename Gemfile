@@ -14,6 +14,7 @@ rails_gem = case rails_version
             end
 
 gem 'rails', rails_gem
+gem 'rspec-rails', '~> 3.0'
 gem 'sqlite3'
 gem 'pry'
 gem 'pry-byebug'

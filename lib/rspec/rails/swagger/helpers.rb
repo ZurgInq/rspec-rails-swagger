@@ -218,10 +218,15 @@ module RSpec
                 body = builder.body
 
                 # Run the request
-                if ::Rails::VERSION::MAJOR >= 5
-                  self.send(method, path, {params: body, headers: headers, env: env})
-                else
-                  self.send(method, path, body, headers.merge(env))
+                if defined?(::Rails)
+                  RSpec::Rails::Swagger::RequestCaller.new.call(
+                    self, 
+                    method: method, 
+                    path: path, 
+                    body: body, 
+                    headers: headers, 
+                    env: env,
+                  )  
                 end
 
                 if example.metadata[:capture_examples]
@@ -233,7 +238,7 @@ module RSpec
               # TODO: see if we can get the caller to show up in the error
               # backtrace for this test.
               it("returns the correct status code") do
-                expect(response).to have_http_status(status_code)
+                expect(response.status).to eq(status_code)
               end
             end
           end
